@@ -1,0 +1,74 @@
+# kfilter Makefile
+# (c) 2017, Brian Stephenson
+# brian@bstephen.me.uk
+#
+EXE	=	kfilter64
+CC		=	g++	
+LD		=	g++
+RELEASE	=	-DNDEBUG -O3
+DEBUG	=	-g
+CFLAGS	=	${RELEASE} -c -Wall -march=native
+LDFLAGS	=	-o${EXE}
+IND		=	astyle
+INDOPTS	=	--style=kr --align-pointer=type --indent=tab=3 --indent=spaces \
+			--pad-oper --unpad-paren --break-blocks --delete-empty-lines \
+			--pad-header
+CHDS	=	kfilter.hpp
+CMODS	=	main.cpp reader.cpp diagram.cpp footer.cpp solution.cpp
+COBJS	=	main.o reader.o diagram.o footer.o solution.o
+CASMS	=	main.asm reader.asm diagram.asm footer.asm solution.asm
+XMODS	=	tinystr.cpp tinyxml.cpp tinyxmlerror.cpp tinyxmlparser.cpp
+XOBJS	=	tinystr.o tinyxml.o tinyxmlerror.o tinyxmlparser.o
+XHDS	=	tinystr.h tinyxml.h
+
+kfilter:	${COBJS} ${XOBJS}
+	${LD} ${LDFLAGS} ${COBJS} ${XOBJS}
+	copy ${EXE}.exe c:\bin\${EXE}.exe
+
+main.o:	main.cpp ${CHDS}
+	${CC} ${CFLAGS} ${RELEASE} ${DEBUG} main.cpp
+	
+
+reader.o:	reader.cpp ${CHDS}
+	${CC} ${CFLAGS} ${RELEASE} ${DEBUG} reader.cpp
+	
+
+diagram.o:	diagram.cpp ${CHDS}
+	${CC} ${CFLAGS} ${RELEASE} ${DEBUG} diagram.cpp
+	
+
+footer.o:	footer.cpp ${CHDS}
+	${CC} ${CFLAGS} ${RELEASE} ${DEBUG} footer.cpp
+	
+
+solution.o:	solution.cpp ${CHDS}
+	${CC} ${CFLAGS} ${RELEASE} ${DEBUG} solution.cpp
+	
+
+tinystr.o: tinystr.cpp ${XHDS}
+	${CC} ${CFLAGS} ${RELEASE} ${DEBUG} tinystr.cpp
+	
+	
+tinyxml.o: tinyxml.cpp ${XHDS}
+	${CC} ${CFLAGS} ${RELEASE} ${DEBUG} tinyxml.cpp
+	
+	
+tinyxmlerror.o: tinyxmlerror.cpp ${XHDS}
+	${CC} ${CFLAGS} ${RELEASE} ${DEBUG} tinyxmlerror.cpp
+	
+	
+tinyxmlparser.o: tinyxmlparser.cpp ${XHDS}
+	${CC} ${CFLAGS} ${RELEASE} ${DEBUG} tinyxmlparser.cpp
+	
+	
+clean:
+	del ${COBJS} ${XOBJS} ${CASMS} ${EXE}.exe
+
+tidy:
+	${IND} ${INDOPTS} ${CMODS} ${CHDS}
+
+touch:
+	touch ${CMODS} ${CHDS}
+	
+count:
+	wc -l ${CMODS} ${CHDS} | sort -b -n	
